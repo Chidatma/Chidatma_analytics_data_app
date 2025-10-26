@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Info Form</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Personal Info</h1>
+    <form id="contactForm">
+      <label>Clients</label>
+      <input type="text" name="Clients" placeholder="Clients" required />
+
+      <label>No. of Headshots</label>
+      <input type="text" name="Headshots" placeholder="No. of Headshots" required />
+
+      <label>Price</label>
+      <input type="text" name="Price" placeholder="Price" required />
+
+      <label>Status</label>
+      <input type="text" name="Status" placeholder="Status" required />
+
+      <label>Gmail</label>
+      <input type="email" name="Gmail" placeholder="Gmail" required />
+
+      <button type="submit">Submit</button>
+      <p id="status"></p>
+    </form>
+  </div>
+
+  <script>
+    // ✅ Your deployed Google Apps Script Web App URL
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-Cadz3gv_MnKFuoTIpHOBcxzjOZPeOck3KYYWcBHvXo_UU9QrLdJJjiR3bbKBR6S7/exec";
+
+    const form = document.getElementById("contactForm");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        Clients: form.Clients.value,
+        Headshots: form.Headshots.value,
+        Price: form.Price.value,
+        Status: form.Status.value,
+        Gmail: form.Gmail.value,
+      };
+
+      status.textContent = "Submitting...";
+      status.style.color = "#fff";
+
+      try {
+        const res = await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors", // ✅ Allows submission without CORS block
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        // ✅ no-cors returns opaque response, so we just show success message directly
+        status.textContent = `✅ Thank you ${form.Clients.value}! Your data has been saved.`;
+        status.style.color = "#48e6a4";
+        form.reset();
+
+      } catch (err) {
+        status.textContent = "⚠️ Error: " + err.message;
+        status.style.color = "#ff4d4d";
+      }
+    });
+  </script>
+</body>
+</html>
